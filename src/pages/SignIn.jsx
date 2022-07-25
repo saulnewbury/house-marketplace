@@ -13,7 +13,7 @@ export default function SignIn() {
 
   const onChange = e => {
     setFormData(prevState => ({
-      prevState,
+      ...prevState,
       [e.target.id]: e.target.value
     }))
   }
