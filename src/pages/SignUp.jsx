@@ -5,6 +5,7 @@ import {
   createUserWithEmailAndPassword,
   updateProfile
 } from 'firebase/auth'
+import { setDoc, doc, serverTimestamp } from 'firebase/firestore'
 import { db } from '../firebase.config'
 import { ReactComponent as ArrowRightIcon } from '../assets/svg/keyboardArrowRightIcon.svg'
 // {ReactComponent as ArrowRightIcon } means you can use it like a compenent: <Arrow... /> etc.
@@ -46,6 +47,14 @@ export default function SignUp() {
       updateProfile(auth.currentUser, {
         displayName: name
       })
+
+      const formDataCopy = { ...formData }
+      delete formDataCopy.password // deleting password from object
+      formDataCopy.timestamp = serverTimestamp() // adding timestampt to object
+
+      // Set doc updates the database and add our user to the users collection
+      await setDoc(doc(db, 'users', user.uid), formDataCopy)
+
       navigate('/')
     } catch (error) {
       console.log(error)
